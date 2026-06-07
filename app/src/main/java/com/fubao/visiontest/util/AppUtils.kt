@@ -50,3 +50,4 @@ object AppUtils {
         // placeholder - 实际应实现数据存储
     }
 }
+// Build: Sun Jun  7 12:29:02 CST 2026
