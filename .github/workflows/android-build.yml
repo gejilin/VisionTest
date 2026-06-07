@@ -16,9 +16,18 @@ jobs:
     - name: Build Debug APK
       run: |
         ./gradlew assembleDebug --no-daemon --stacktrace 2>&1 | tee /tmp/build.log; exit ${PIPESTATUS[0]}
-    - name: Show Error Log
+    - name: Error Summary
       if: failure()
-      run: tail -200 /tmp/build.log
+      run: |
+        echo "### Build Error Log" >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
+        grep -A 5 "error:\|ERROR:\|FAILED:\|failure" /tmp/build.log | head -100 >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Last 100 lines" >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
+        tail -100 /tmp/build.log >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
     - name: Upload APK
       if: success()
       uses: actions/upload-artifact@v4
