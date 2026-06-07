@@ -21,9 +21,10 @@ jobs:
     - name: Get Gradle Wrapper
       run: |
         curl -sL -o gradlew "https://raw.githubusercontent.com/gradle/gradle/v8.2.0/gradlew"
-        curl -sL -o gradle/wrapper/gradle-wrapper.jar \
-          "https://repo1.maven.org/maven2/org/gradle/gradle-wrapper/8.2/gradle-wrapper-8.2.jar"
+        curl -sL -o gradle/wrapper/gradle-wrapper.jar "https://repo1.maven.org/maven2/org/gradle/gradle-wrapper/8.2/gradle-wrapper-8.2.jar"
         chmod +x gradlew
+        mkdir -p gradle/wrapper
+        printf 'distributionBase=GRADLE_USER_HOME\ndistributionPath=wrapper/dists\ndistributionUrl=https\\://services.gradle.org/distributions/gradle-8.2-bin.zip\nnetworkTimeout=10000\nvalidateDistributionUrl=true\nzipStoreBase=GRADLE_USER_HOME\nzipStorePath=wrapper/dists\n' > gradle/wrapper/gradle-wrapper.properties
 
     - name: Build Debug APK
       run: ./gradlew assembleDebug --no-daemon
