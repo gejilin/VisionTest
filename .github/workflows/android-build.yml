@@ -1,40 +1,26 @@
 name: Build Android APK
-
-on:
-  push:
-    branches: [ "main" ]
-  workflow_dispatch:
-
+on: [push, workflow_dispatch]
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4
-
     - name: Set up JDK 17
       uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-
+      with: {java-version: '17', distribution: 'temurin'}
     - name: Install Gradle
       run: |
         curl -sL -o /tmp/gradle.zip "https://services.gradle.org/distributions/gradle-8.2-bin.zip"
         unzip -q -o /tmp/gradle.zip -d /opt
         echo "/opt/gradle-8.2/bin" >> $GITHUB_PATH
-
-    - name: Generate Wrapper
-      run: gradle wrapper --gradle-version 8.2
-
-    - name: Build APK
+    - name: Generate wrapper & build
       run: |
+        gradle wrapper --gradle-version 8.2
         chmod +x gradlew
-        ./gradlew assembleDebug --no-daemon
-
+        ./gradlew assembleDebug --no-daemon 2>&1
     - name: Upload APK
+      if: success()
       uses: actions/upload-artifact@v4
       with:
         name: VisionTest-v1.2.0-APK
         path: app/build/outputs/apk/debug/app-debug.apk
-        retention-days: 30
