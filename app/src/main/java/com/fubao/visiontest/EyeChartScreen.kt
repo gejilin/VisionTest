@@ -236,7 +236,7 @@ fun GestureInstructionCard() {
                     InstructionItem("E 口朝上", "向上滑动"), InstructionItem("E 口朝下", "向下滑动"),
                     InstructionItem("E 口朝左", "向左滑动"), InstructionItem("E 口朝右", "向右滑动")
                 ))
-                HorizontalDivider(color = MaterialTheme.colorScheme.outline)
+                Divider(color = MaterialTheme.colorScheme.outline, thickness = (1).dp)
                 InstructionSection("❌ 没看到/看不清时", listOf(InstructionItem("左右摆动手掌", "像打招呼一样左右摇手")))
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -305,7 +305,7 @@ fun VisionSummaryCard(summary: Pair<Double, Double>) {
                 }
             }
             Spacer(modifier = Modifier.height(12.dp))
-            LinearProgressIndicator(progress = { summary.first.toFloat().coerceIn(0f, 1f) }, modifier = Modifier.fillMaxWidth().height(8.dp), trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f))
+            LinearProgressIndicator(progress = summary.first.toFloat().coerceIn(0f, 1f), modifier = Modifier.fillMaxWidth().height(8.dp), color = MaterialTheme.colorScheme.primary, trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f))
             Spacer(modifier = Modifier.height(8.dp))
             Text("建议定期（每 6-12 个月）进行专业视力检查。本应用仅供娱乐参考。", fontSize = 11.sp, color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f), fontStyle = FontStyle.Italic, textAlign = TextAlign.Center)
         }
