@@ -18,28 +18,30 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Install Gradle
+    - name: Get Gradle Wrapper
       run: |
-        curl -sL "https://services.gradle.org/distributions/gradle-8.2-bin.zip" -o /tmp/gradle.zip
-        unzip -q /tmp/gradle.zip -d /opt
-        echo "/opt/gradle-8.2/bin" >> $GITHUB_PATH
-
-    - name: Generate Gradle Wrapper
-      run: |
-        cd ${{ github.workspace }}
-        gradle wrapper --gradle-version 8.2
-
-    - name: Grant execute permission
-      run: chmod +x gradlew
+        curl -sL "https://raw.githubusercontent.com/gradle/gradle/v8.2.0/gradlew" -o gradlew
+        curl -sL "https://repo1.maven.org/maven2/org/gradle/gradle-wrapper/8.2/gradle-wrapper-8.2.jar" -o gradle/wrapper/gradle-wrapper.jar
+        chmod +x gradlew
+        echo "Wrappers ready"
 
     - name: Build Debug APK
-      run: ./gradlew assembleDebug
-      env:
-        CI: true
+      run: |
+        ./gradlew assembleDebug --no-daemon --stacktrace 2>&1
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
+      if: success()
       with:
         name: VisionTest-v1.2.0-APK
         path: app/build/outputs/apk/debug/app-debug.apk
         retention-days: 30
+
+    - name: Upload Build Reports
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-reports
+        path: |
+          app/build/reports/
+          app/build/outputs/logs/
